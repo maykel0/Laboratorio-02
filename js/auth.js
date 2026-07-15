@@ -13,10 +13,22 @@
 import { API_BASE_URL, AUTH_ENDPOINTS, SESSION_KEY, REQUEST_TIMEOUT_MS } from './config.js';
 
 /**
- * Realiza un fetch con timeout manual usando AbortController.
- * Reutilizado aquí porque las rutas de auth no pasan por api.js
- * (no requieren JWT, así que no tiene sentido meterlas en ese wrapper).
+ * Traduce una excepción de fetch (TypeError de red/CORS, o AbortError de
+ * timeout) a un mensaje específico para el usuario, y deja el error original
+ * en consola para que se pueda diagnosticar en DevTools sin adivinar.
  */
+function describeNetworkFailure(err) {
+  console.error('Fallo de red en auth.js:', err);
+  if (err.name === 'AbortError') {
+    return `El servidor no respondió a tiempo (más de ${REQUEST_TIMEOUT_MS / 1000}s). Puede estar caído o muy lento en este momento.`;
+  }
+  // Un TypeError "Failed to fetch" casi siempre es CORS (bloqueo del navegador)
+  // o ausencia total de red. Revisa la pestaña Network de DevTools: si la
+  // petición aparece marcada como bloqueada por CORS, no hay solución
+  // puramente client-side — se necesitaría un proxy o que el servidor
+  // habilite tu origen.
+  return 'No se pudo contactar al servidor. Revisa la pestaña "Network" de DevTools: si dice "CORS" o "blocked", es el servidor rechazando tu origen; si no aparece la petición, probablemente abriste el archivo con file:// en vez de un servidor local.';
+}
 async function fetchWithTimeout(url, options) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -40,7 +52,7 @@ export async function register({ name, email, password }) {
       body: JSON.stringify({ name, email, password }),
     });
   } catch (err) {
-    throw buildAuthError('network', 'No se pudo contactar al servidor. Verifica tu conexión.');
+    throw buildAuthError('network', describeNetworkFailure(err));
   }
 
   const body = await safeJson(response);
@@ -63,7 +75,7 @@ export async function login({ email, password }) {
       body: JSON.stringify({ email, password }),
     });
   } catch (err) {
-    throw buildAuthError('network', 'No se pudo contactar al servidor. Verifica tu conexión.');
+    throw buildAuthError('network', describeNetworkFailure(err));
   }
 
   const body = await safeJson(response);
