@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Iniciar sesión · Mundial 2026</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<main class="auth-page">
+  <div class="auth-card">
+    <h1>⚽ Mundial 2026</h1>
+    <p class="subtitle">Inicia sesión para consultar partidos, equipos, grupos y estadios.</p>
+
+    <div class="auth-tabs" role="tablist">
+      <button type="button" id="tab-login" class="active" role="tab" aria-selected="true">Iniciar sesión</button>
+      <button type="button" id="tab-register" role="tab" aria-selected="false">Crear cuenta</button>
+    </div>
+
+    <!-- Todo el contenido dinámico (formularios, mensajes de error) se
+         inserta por JavaScript en este contenedor: no hay HTML estático
+         de resultados, tal como exige el requisito #8. -->
+    <div id="auth-form-container"></div>
+  </div>
+</main>
+
+<script type="module" src="js/pages/login.js"></script>
+</body>
+</html>

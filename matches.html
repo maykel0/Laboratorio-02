@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Partidos · Mundial 2026</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-shell">
+  <aside id="app-sidebar"></aside>
+  <main class="app-main">
+    <div class="page-header">
+      <h1>Partidos</h1>
+      <p>Calendario completo de los 104 partidos del Mundial 2026.</p>
+    </div>
+
+    <div class="filter-bar">
+      <select id="filter-group" aria-label="Filtrar por grupo o fase"></select>
+    </div>
+
+    <section id="matches-section" aria-live="polite"></section>
+  </main>
+</div>
+
+<script type="module" src="js/pages/matches.js"></script>
+</body>
+</html>

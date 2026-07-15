@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Equipos · Mundial 2026</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-shell">
+  <aside id="app-sidebar"></aside>
+  <main class="app-main">
+    <div class="page-header">
+      <h1>Equipos</h1>
+      <p>Los 48 equipos clasificados al Mundial 2026.</p>
+    </div>
+
+    <div class="filter-bar">
+      <select id="filter-group" aria-label="Filtrar por grupo"></select>
+      <input id="filter-search" type="search" placeholder="Buscar equipo..." aria-label="Buscar equipo" />
+    </div>
+
+    <section id="teams-section" aria-live="polite"></section>
+  </main>
+</div>
+
+<script type="module" src="js/pages/teams.js"></script>
+</body>
+</html>
