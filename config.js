@@ -10,7 +10,7 @@
 // NOTA: apunta a un proxy propio (Cloudflare Worker) en vez de la API directa,
 // porque worldcup26.ir no envía headers CORS y el navegador bloquea el fetch
 // desde https://maykel0.github.io. El proxy reenvía las peticiones tal cual
-// y agrega los headers que faltan. Ver /worldcup-proxy/worker.js
+// y agrega los headers que faltan.
 export const API_BASE_URL = 'https://worldcup26-proxy.maykel0.workers.dev';
 
 // Endpoints de autenticación (NO requieren JWT, son los que lo generan)
