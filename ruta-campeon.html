@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ruta del Campeón · Mundial 2026</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div class="app-shell">
+  <aside id="app-sidebar"></aside>
+  <main class="app-main">
+    <div class="page-header">
+      <h1>La Ruta del Campeón</h1>
+      <p>Elegí un equipo para ver su itinerario completo: partidos, fechas y estadios.</p>
+    </div>
+
+    <div class="filter-bar">
+      <select id="team-select" aria-label="Elegir equipo"></select>
+    </div>
+
+    <section id="itinerary-section" aria-live="polite"></section>
+  </main>
+</div>
+
+<script type="module" src="js/pages/ruta-campeon.js"></script>
+</body>
+</html>

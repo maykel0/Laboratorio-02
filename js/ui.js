@@ -22,6 +22,11 @@ const NAV_ITEMS = [
   { href: 'teams.html', label: 'Equipos', icon: '👥' },
   { href: 'groups.html', label: 'Grupos', icon: '📊' },
   { href: 'stadiums.html', label: 'Estadios', icon: '🏟️' },
+  { href: 'ruta-campeon.html', label: 'Ruta del Campeón', icon: '🧭' },
+  { href: 'goleadas.html', label: 'Goleadas', icon: '🔥' },
+  { href: 'muro.html', label: 'El Muro', icon: '🧱' },
+  { href: 'analitica-estadios.html', label: 'Analítica de Estadios', icon: '📈' },
+  { href: 'radar-empates.html', label: 'Radar de Empates', icon: '🤝' },
 ];
 
 /**
@@ -192,6 +197,51 @@ export function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = String(str ?? '');
   return div.innerHTML;
+}
+
+/* ------------------------------------------------------------------ */
+/* HELPERS DE CRUCE DE DATOS (Categoría A)                              */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Normaliza la respuesta de /get/teams (puede venir como arreglo directo
+ * o envuelta en { teams: [...] }) y la indexa por id para cruces O(1)
+ * en vez de un .find() por cada partido/registro.
+ * @param {any} teamsData
+ * @returns {Map<string, object>}
+ */
+export function indexTeamsById(teamsData) {
+  const arr = Array.isArray(teamsData) ? teamsData : teamsData?.teams || [];
+  const map = new Map();
+  arr.forEach((t) => map.set(String(t.id), t));
+  return map;
+}
+
+/**
+ * Devuelve el HTML (nombre + bandera opcional) para un equipo cruzado por id.
+ * Si el índice de equipos no está disponible todavía (petición en curso o
+ * fallida), degrada mostrando el id crudo en vez de romper el renderizado.
+ */
+export function teamDisplayHtml(teamsIndex, teamId, { withFlag = false } = {}) {
+  const team = teamsIndex?.get(String(teamId));
+  if (!team) return `<span title="Equipo ${escapeHtml(teamId)}">ID ${escapeHtml(teamId)}</span>`;
+  const flag = withFlag && team.flag
+    ? `<img src="${team.flag}" alt="" style="width:18px;height:18px;border-radius:50%;object-fit:cover;vertical-align:-4px;margin-right:6px;" loading="lazy" />`
+    : '';
+  return `${flag}${escapeHtml(team.name_en || team.name || `ID ${teamId}`)}`;
+}
+
+/** Normaliza /get/stadiums (arreglo directo o { stadiums: [...] }), indexado por id. */
+export function indexStadiumsById(stadiumsData) {
+  const arr = Array.isArray(stadiumsData) ? stadiumsData : stadiumsData?.stadiums || [];
+  const map = new Map();
+  arr.forEach((s) => map.set(String(s.id), s));
+  return map;
+}
+
+/** true si el partido terminó (la API devuelve "TRUE"/"FALSE" como string). */
+export function isFinished(match) {
+  return String(match.finished).toUpperCase() === 'TRUE';
 }
 
 /* ------------------------------------------------------------------ */

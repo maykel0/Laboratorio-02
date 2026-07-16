@@ -89,3 +89,35 @@ export async function retryFetch(attemptFn, options = {}) {
   if (lastResponse) return lastResponse;
   throw lastError || new Error('Fallo de red desconocido tras reintentos');
 }
+
+/**
+ * Reintenta `taskFn` en segundo plano, indefinidamente, cada `intervalMs`,
+ * hasta que tenga éxito o se llame a la función de cancelación devuelta.
+ * Por qué existe: requisito 2.2 (Rastreador de Goleadas). `retryFetch` ya
+ * agota sus 5 reintentos con backoff y termina lanzando un error — eso basta
+ * para la petición "en primer plano". Pero cuando esa petición es secundaria
+ * (por ejemplo /get/teams, usada solo para mostrar nombres en vez de ids) no
+ * queremos bloquear ni romper la vista: la seguimos reintentando en segundo
+ * plano para que, apenas el servidor se recupere, la UI se actualice sola,
+ * sin que el usuario tenga que recargar la página.
+ * @param {() => Promise<any>} taskFn
+ * @param {(result:any) => void} onSuccess
+ * @param {number} intervalMs
+ * @returns {() => void} función para cancelar el reintento en segundo plano
+ */
+export function backgroundRetry(taskFn, onSuccess, intervalMs = 16000) {
+  let cancelled = false;
+
+  async function attempt() {
+    if (cancelled) return;
+    try {
+      const result = await taskFn();
+      if (!cancelled) onSuccess(result);
+    } catch {
+      if (!cancelled) setTimeout(attempt, intervalMs);
+    }
+  }
+
+  setTimeout(attempt, intervalMs);
+  return () => { cancelled = true; };
+}
