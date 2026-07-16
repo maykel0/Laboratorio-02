@@ -7,7 +7,7 @@
  */
 
 // URL base de la API pública del Mundial 2026 (ver https://worldcup26.ir/api-docs)
-export const API_BASE_URL = 'https://worldcup26.ir';
+export const API_BASE_URL = 'https://worldcup26-proxy.maykel0.workers.dev';
 
 // Endpoints de autenticación (NO requieren JWT, son los que lo generan)
 export const AUTH_ENDPOINTS = {
